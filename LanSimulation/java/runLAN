@@ -1,0 +1,7 @@
+#!/bin/sh
+classpath=":built:.:junit.jar:"
+mainclass="lanSimulation.LANSimulation"
+
+echo 'TEST MODE: If test fails with [Generated output is not as expected] then rename useOutput.txt in [expectedOutput.txt]'
+
+java -ea -classpath "$classpath" "$mainclass" "$@"

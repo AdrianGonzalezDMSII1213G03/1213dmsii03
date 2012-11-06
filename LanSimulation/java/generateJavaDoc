@@ -1,0 +1,2 @@
+#!/bin/sh
+javadoc -sourcepath . -source 1.4 -d doc lanSimulation.internals lanSimulation
