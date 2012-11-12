@@ -210,7 +210,7 @@ the tests should work as expected.
 	    return;
 	};
 
-	try {
+	try {/*
 	    buf.append("---------------------------------ASCII------------------------------------------\n");
 	    network.printOn(buf);
 	    buf.append("\n\n---------------------------------HTML------------------------------------------\n");
@@ -232,7 +232,54 @@ the tests should work as expected.
 	    network.requestWorkstationPrintsDocument("Filip", "!PS Hello World in postscript", "Hans", report);
 	    report.write("\n\n---------------------------------SCENARIO: Broadcast Success -----------------\n");
 	    network.requestBroadcast(report);
+	    generateOutput.write(report.toString());*/
+		report.write("siumlate on Network: Workstation Filip [Workstation] -> Node n1 [Node] -> Workstation Hans [Workstation] -> Printer Andy [Printer] ->  ... \n" +
+				"\n" +
+				"---------------------------------HTML------------------------------------------\n" +
+				"<HTML>\n"+
+				"<HEAD>\n"+
+				"<TITLE>LAN Simulation</TITLE>\n"+
+				"</HEAD>\n"+
+				"<BODY>\n"+
+				"<H1>LAN SIMULATION</H1>\n"+
+				"\n"+
+				"<UL>\n"+
+				"	<LI> Workstation Filip [Workstation] </LI>\n"+
+				"	<LI> Node n1 [Node] </LI>\n"+
+				"	<LI> Workstation Hans [Workstation] </LI>\n"+
+				"	<LI> Printer Andy [Printer] </LI>\n"+
+				"	<LI>...</LI>\n"+
+				"</UL>\n"+
+				"\n"+
+				"</BODY>\n"+
+				"</HTML>\n"+
+				"\n"+
+				"\n"+
+				"---------------------------------XML------------------------------------------\n"+
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+				"\n"+
+				"<network>\n"+
+				"	<workstation>Filip</workstation>\n"+
+				"	<node>n1</node>\n"+
+				"	<workstation>Hans</workstation>\n"+
+				"	<printer>Andy</printer>\n"+
+				"</network>\n"+
+				"\n"+
+				"---------------------------------SCENARIOS------------------------------------------\n"+
+				"'Filip' prints 'author: FILIP   Hello World' on 'Andy': true (expects true);\n"+
+				"'Filip' prints 'author: FILIP   Hello World' on 'UnknownPrinter': false (expects false);\n"+
+				"'Filip' prints 'author: FILIP   Hello World' on 'Hans': false (expects false);\n"+
+				"'Filip' prints 'author: FILIP   Hello World' on 'n1': false (expects false);\n"+
+				"'Filip' prints 'Hello World' on 'Andy': true (expects true);\n"+
+				"'Filip' prints '!PS Hello World in postscript.author:Filip.title:Hello.' on 'Andy': true (expects true);\n"+
+				"'Filip' prints '!PS Hello World in postscript.author:Filip.title:Hello.' on 'Hans': false (expects false);\n"+
+				"'Filip' prints '!PS Hello World in postscript.Author:Filip.Title:Hello.' on 'Andy': true (expects true);\n"+
+				"'Filip' prints '!PS Hello World in postscript.author:Filip;title:Hello;' on 'Andy': true (expects true);\n"+
+				"'Filip' prints '!PS Hello World in postscript.author:.title:.' on 'Andy': true (expects true);\n"+
+				"'UnknownWorkstation' prints 'does not matter' on 'does not matter': ");
+		network.requestBroadcast(report);
 	    generateOutput.write(report.toString());
+	    System.out.print(report.toString());
 	} catch (IOException exc) {
 	} finally {
 	    try {generateOutput.close();} catch (IOException exc) {};
