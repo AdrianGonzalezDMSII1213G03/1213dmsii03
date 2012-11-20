@@ -282,22 +282,14 @@ Therefore #receiver sends a packet across the token ring network, until either
 			endPos = document.message_.indexOf(".", startPos + 6);
 			if (endPos < 0) {endPos = document.message_.length();};
 			title = document.message_.substring(startPos + 6, endPos);};
-		    report.write("\tAccounting -- author = '");
-		    report.write(author);
-		    report.write("' -- title = '");
-		    report.write(title);
-		    report.write("'\n");
+		    printAccounting(report, author, title);
 		    report.write(">>> Postscript job delivered.\n\n");
 		    report.flush();
 		} else {
 		    title = "ASCII DOCUMENT";
 		    if (document.message_.length() >= 16) {
 			author = document.message_.substring(8, 16);};
-		    report.write("\tAccounting -- author = '");
-		    report.write(author);
-		    report.write("' -- title = '");
-		    report.write(title);
-		    report.write("'\n");
+		    printAccounting(report, author, title);
 		    report.write(">>> ASCII Print job delivered.\n\n");
 		    report.flush();
 		};
@@ -315,6 +307,15 @@ Therefore #receiver sends a packet across the token ring network, until either
 	    return false;
 	}
     }
+
+	private void printAccounting(Writer report, String author, String title)
+			throws IOException {
+		report.write("\tAccounting -- author = '");
+		report.write(author);
+		report.write("' -- title = '");
+		report.write(title);
+		report.write("'\n");
+	}
     
 /**
 Return a printable representation of #receiver.
