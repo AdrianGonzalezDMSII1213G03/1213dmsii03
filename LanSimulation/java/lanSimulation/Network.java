@@ -176,10 +176,7 @@ which should be treated by all nodes.
 		report.write("\tNode '");
 		report.write(currentNode.name_);
 		report.write("' accepts broadcase packet.\n");
-		report.write("\tNode '");
-		report.write(currentNode.name_);
-		report.write("' passes packet on.\n");
-		report.flush();
+		printLogging(report, currentNode);
 	    } catch (IOException exc) {
 		// just ignore
 	    };
@@ -192,7 +189,14 @@ which should be treated by all nodes.
 	    // just ignore
 	};
 	return true;
-    }    
+    }
+
+private void printLogging(Writer report, Node node) throws IOException {
+	report.write("\tNode '");
+	report.write(node.name_);
+	report.write("' passes packet on.\n");
+	report.flush();
+}    
         
 /**
 The #receiver is requested by #workstation to print #document on #printer.
@@ -228,10 +232,7 @@ Therefore #receiver sends a packet across the token ring network, until either
         startNode = (Node) workstations_.get(workstation);
 
 	try {
-	    report.write("\tNode '");
-	    report.write(startNode.name_);
-	    report.write("' passes packet on.\n");
-	    report.flush();
+	    printLogging(report, startNode);
 	} catch (IOException exc) {
 	    // just ignore
 	};
@@ -239,10 +240,7 @@ Therefore #receiver sends a packet across the token ring network, until either
         while ((! packet.destination_.equals(currentNode.name_))
 	    & (! packet.origin_.equals(currentNode.name_))) {
 	    try {
-		report.write("\tNode '");
-		report.write(currentNode.name_);
-		report.write("' passes packet on.\n");
-		report.flush();
+		printLogging(report, currentNode);
 	    } catch (IOException exc) {
 		// just ignore
 	    };
