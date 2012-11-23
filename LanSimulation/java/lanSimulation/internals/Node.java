@@ -153,4 +153,222 @@ public class Node {
 		}
 	}
 
+	/**
+	The #receiver is requested by #workstation to print #document on #printer.
+	Therefore #receiver sends a packet across the token ring network, until either
+	(1) #printer is reached or (2) the packet travelled complete token ring.
+	<p><strong>Precondition:</strong> consistentNetwork() & hasWorkstation(workstation);</p>
+	@param network TODO
+	 * @param workstation Name of the workstation requesting the service.
+	 * @param document Contents that should be printed on the printer.
+	 * @param printer Name of the printer that should receive the document.
+	 * @param report Stream that will hold a report about what happened when handling the request.
+	 * @return Anwer #true when the print operation was succesful and #false otherwise
+	 */
+	    public boolean requestWorkstationPrintsDocument(Network network, String workstation, String document, String printer, Writer report) {
+	        assert network.consistentNetwork() & network.hasWorkstation(workstation);
+	
+		try {
+		    report.write("'");
+		    report.write(workstation);
+		    report.write("' requests printing of '");
+		    report.write(document);
+		    report.write("' on '");
+		    report.write(printer);
+		    report.write("' ...\n");
+		} catch (IOException exc) {
+		    // just ignore
+		};
+		
+		boolean result = false;
+	        Node startNode, currentNode;
+	        Packet packet = new Packet(document, workstation, printer);
+	        
+	        startNode = (Node) network.workstations_.get(workstation);
+	
+		try {
+		    startNode.printLogging(report, network);
+		} catch (IOException exc) {
+		    // just ignore
+		};
+	        currentNode = startNode.nextNode_;
+	        while ((! packet.destination_.equals(currentNode.name_))
+		    & (! packet.origin_.equals(currentNode.name_))) {
+		    try {
+			currentNode.printLogging(report, network);
+		    } catch (IOException exc) {
+			// just ignore
+		    };
+		currentNode = currentNode.nextNode_;
+	        };
+	
+		if (packet.destination_.equals(currentNode.name_)) {
+		    result = currentNode.printDocument(network, packet, report);
+		} else {
+		    try {
+			report.write(">>> Destinition not found, print job cancelled.\n\n");
+			report.flush();
+		    } catch (IOException exc) {
+			// just ignore
+		    };
+		    result = false;
+		}
+		
+		return result;
+	    }
+
+	/**
+	The #receiver is requested to broadcast a message to all nodes.
+	Therefore #receiver sends a special broadcast packet across the token ring network,
+	which should be treated by all nodes.
+	<p><strong>Precondition:</strong> consistentNetwork();</p>
+	@param network TODO
+	 * @param report Stream that will hold a report about what happened when handling the request.
+	 * @return Anwer #true when the broadcast operation was succesful and #false otherwise
+	*/
+	    public boolean requestBroadcast(Network network, Writer report) {
+	        assert network.consistentNetwork();
+	
+		try {
+		    report.write("Broadcast Request\n");
+		} catch (IOException exc) {
+		    // just ignore
+		};
+	
+	        Node currentNode = this;
+	        Packet packet = new Packet("BROADCAST", name_, name_);
+	        do {
+		    try {
+			report.write("\tNode '");
+			report.write(currentNode.name_);
+			report.write("' accepts broadcase packet.\n");
+			currentNode.printLogging(report, network);
+		    } catch (IOException exc) {
+			// just ignore
+		    };
+		    currentNode = currentNode.nextNode_;
+	        } while (! packet.destination_.equals(currentNode.name_));
+	
+		try {
+		    report.write(">>> Broadcast travelled whole token ring.\n\n");
+		} catch (IOException exc) {
+		    // just ignore
+		};
+		return true;
+	    }
+
+	/**
+	Write a printable representation of #receiver on the given #buf.
+	<p><strong>Precondition:</strong> isInitialized();</p>
+	 * @param network TODO
+	 * @param buf TODO
+	*/
+	    public void printOn (Network network, StringBuffer buf) {
+	        assert network.isInitialized();
+	        Node currentNode = this;
+	        do {
+	            switch (currentNode.type_) {
+	                case Node.NODE:
+	                    buf.append("Node ");
+	                    buf.append(currentNode.name_);
+	                    buf.append(" [Node]");
+	                    break;
+	                case Node.WORKSTATION:
+	                    buf.append("Workstation ");
+	                    buf.append(currentNode.name_);
+	                    buf.append(" [Workstation]");
+	                    break;
+	                case Node.PRINTER:
+	                    buf.append("Printer ");
+	                    buf.append(currentNode.name_);
+	                    buf.append(" [Printer]");
+	                    break;
+	                default:
+	                    buf.append("(Unexpected)");;
+	                    break;
+	            };
+	            buf.append(" -> ");
+	            currentNode = currentNode.nextNode_;
+	        } while (currentNode != this);
+	        buf.append(" ... ");
+	    }
+
+	/**
+	Write a HTML representation of #receiver on the given #buf.
+	 <p><strong>Precondition:</strong> isInitialized();</p>
+	 * @param network TODO
+	 * @param buf TODO
+	 */
+	    public void printHTMLOn (Network network, StringBuffer buf) {
+		assert network.isInitialized();
+	
+		buf.append("<HTML>\n<HEAD>\n<TITLE>LAN Simulation</TITLE>\n</HEAD>\n<BODY>\n<H1>LAN SIMULATION</H1>");
+		Node currentNode = this;
+		buf.append("\n\n<UL>");
+		do {
+		    buf.append("\n\t<LI> ");
+		    switch (currentNode.type_) {
+			case Node.NODE:
+			    buf.append("Node ");
+			    buf.append(currentNode.name_);
+			    buf.append(" [Node]");
+			    break;
+			case Node.WORKSTATION:
+			    buf.append("Workstation ");
+			    buf.append(currentNode.name_);
+			    buf.append(" [Workstation]");
+			    break;
+			case Node.PRINTER:
+			    buf.append("Printer ");
+			    buf.append(currentNode.name_);
+			    buf.append(" [Printer]");
+			    break;
+			default:
+			    buf.append("(Unexpected)");;
+			    break;
+		    };
+		    buf.append(" </LI>");
+		    currentNode = currentNode.nextNode_;
+		} while (currentNode != this);
+		buf.append("\n\t<LI>...</LI>\n</UL>\n\n</BODY>\n</HTML>\n");
+	    }
+
+	/**
+	Write an XML representation of #receiver on the given #buf.
+	<p><strong>Precondition:</strong> isInitialized();</p>
+	 * @param network TODO
+	 * @param buf TODO
+	*/
+	    public void printXMLOn (Network network, StringBuffer buf) {
+		assert network.isInitialized();
+	
+		Node currentNode = this;
+		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<network>");
+		do {
+		    buf.append("\n\t");
+		    switch (currentNode.type_) {
+			case Node.NODE:
+			    buf.append("<node>");
+			    buf.append(currentNode.name_);
+			    buf.append("</node>");
+			    break;
+			case Node.WORKSTATION:
+			    buf.append("<workstation>");
+			    buf.append(currentNode.name_);
+			    buf.append("</workstation>");
+			    break;
+			case Node.PRINTER:
+			    buf.append("<printer>");
+			    buf.append(currentNode.name_);
+			    buf.append("</printer>");
+			    break;
+			default:
+			    buf.append("<unknown></unknown>");;
+			    break;
+		    };
+		    currentNode = currentNode.nextNode_;
+		} while (currentNode != this);
+		buf.append("\n</network>");
+	    }
+
 }

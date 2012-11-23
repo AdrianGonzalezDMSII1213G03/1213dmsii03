@@ -166,17 +166,17 @@ public class LANTests extends TestCase {
 	StringWriter report = new StringWriter(500);
 
         assertTrue("PrintSuccess ",
-            network.requestWorkstationPrintsDocument("Filip", "Hello World", "Andy", report));
+            network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "Andy", report));
         assertFalse("PrintFailure (UnkownPrinter) ",
-            network.requestWorkstationPrintsDocument("Filip", "Hello World", "UnknownPrinter", report));
+            network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "UnknownPrinter", report));
         assertFalse("PrintFailure (print on Workstation) ",
-            network.requestWorkstationPrintsDocument("Filip", "Hello World", "Hans", report));
+            network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "Hans", report));
         assertFalse("PrintFailure (print on Node) ",
-            network.requestWorkstationPrintsDocument("Filip", "Hello World", "n1", report));
+            network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "n1", report));
         assertTrue("PrintSuccess Postscript",
-	    network.requestWorkstationPrintsDocument("Filip", "!PS Hello World in postscript", "Andy", report));
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "!PS Hello World in postscript", "Andy", report));
         assertFalse("PrintFailure Postscript",
-	    network.requestWorkstationPrintsDocument("Filip", "!PS Hello World in postscript", "Hans", report));
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "!PS Hello World in postscript", "Hans", report));
     }
 
     public void testBroadcast() {
@@ -184,7 +184,7 @@ public class LANTests extends TestCase {
 	StringWriter report = new StringWriter(500);
 
         assertTrue("Broadcast ",
-		   network.requestBroadcast(report));
+		   network.firstNode_.requestBroadcast(network, report));
     }
 
     /**
@@ -212,26 +212,26 @@ the tests should work as expected.
 
 	try {
 	    buf.append("---------------------------------ASCII------------------------------------------\n");
-	    network.printOn(buf);
+	    network.firstNode_.printOn(network, buf);
 	    buf.append("\n\n---------------------------------HTML------------------------------------------\n");
-	    network.printHTMLOn(buf);
+	    network.firstNode_.printHTMLOn(network, buf);
 	    buf.append("\n\n---------------------------------XML------------------------------------------\n");
-	    network.printXMLOn(buf);
+	    network.firstNode_.printXMLOn(network, buf);
 	    generateOutput.write(buf.toString());
 	    report.write("\n\n---------------------------------SCENARIO: Print Success --------------------------\n");
-	    network.requestWorkstationPrintsDocument("Filip", "Hello World", "Andy", report);
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "Andy", report);
 	    report.write("\n\n---------------------------------SCENARIO: PrintFailure (UnkownPrinter) ------------\n");
-	    network.requestWorkstationPrintsDocument("Filip", "Hello World", "UnknownPrinter", report);
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "UnknownPrinter", report);
 	    report.write("\n\n---------------------------------SCENARIO: PrintFailure (print on Workstation) -----\n");
-	    network.requestWorkstationPrintsDocument("Filip", "Hello World", "Hans", report);
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "Hans", report);
 	    report.write("\n\n---------------------------------SCENARIO: PrintFailure (print on Node) -----\n");
-	    network.requestWorkstationPrintsDocument("Filip", "Hello World", "n1", report);
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "Hello World", "n1", report);
 	    report.write("\n\n---------------------------------SCENARIO: Print Success Postscript-----------------\n");
-	    network.requestWorkstationPrintsDocument("Filip", "!PS Hello World in postscript", "Andy", report);
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "!PS Hello World in postscript", "Andy", report);
 	    report.write("\n\n---------------------------------SCENARIO: Print Failure Postscript-----------------\n");
-	    network.requestWorkstationPrintsDocument("Filip", "!PS Hello World in postscript", "Hans", report);
+	    network.firstNode_.requestWorkstationPrintsDocument(network, "Filip", "!PS Hello World in postscript", "Hans", report);
 	    report.write("\n\n---------------------------------SCENARIO: Broadcast Success -----------------\n");
-	    network.requestBroadcast(report);
+	    network.firstNode_.requestBroadcast(network, report);
 	    generateOutput.write(report.toString());
 		
 	} catch (IOException exc) {
@@ -250,7 +250,7 @@ the tests should work as expected.
 	    Network network = Network.DefaultExample();
 	    StringWriter report = new StringWriter(100);
 	    try{
-	    	network.requestWorkstationPrintsDocument("UnknownWorkstation",
+	    	network.firstNode_.requestWorkstationPrintsDocument(network, "UnknownWorkstation",
 					      "does not matter", "does not matter", report);
 	    }
 	    catch(NullPointerException ex){
