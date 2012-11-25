@@ -192,7 +192,7 @@ public class Node {
 		    // just ignore
 		};
 	        currentNode = startNode.nextNode_;
-	        while ((! packet.destination_.equals(currentNode.name_))
+	        while ((! atDestination(currentNode, packet))
 		    & (! packet.origin_.equals(currentNode.name_))) {
 		    try {
 			currentNode.printLogging(report, network);
@@ -202,7 +202,7 @@ public class Node {
 		currentNode = currentNode.nextNode_;
 	        };
 	
-		if (packet.destination_.equals(currentNode.name_)) {
+		if (atDestination(currentNode, packet)) {
 		    result = currentNode.printDocument(network, packet, report);
 		} else {
 		    try {
@@ -247,7 +247,7 @@ public class Node {
 			// just ignore
 		    };
 		    currentNode = currentNode.nextNode_;
-	        } while (! packet.destination_.equals(currentNode.name_));
+	        } while (! atDestination(currentNode, packet));
 	
 		try {
 		    report.write(">>> Broadcast travelled whole token ring.\n\n");
@@ -256,6 +256,10 @@ public class Node {
 		};
 		return true;
 	    }
+
+	private boolean atDestination(Node currentNode, Packet packet) {
+		return packet.destination_.equals(currentNode.name_);
+	}
 
 	/**
 	Write a printable representation of #receiver on the given #buf.
