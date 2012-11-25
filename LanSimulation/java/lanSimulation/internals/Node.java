@@ -199,7 +199,7 @@ public class Node {
 		    } catch (IOException exc) {
 			// just ignore
 		    };
-		currentNode = currentNode.nextNode_;
+		currentNode = send(currentNode);
 	        };
 	
 		if (atDestination(currentNode, packet)) {
@@ -216,6 +216,11 @@ public class Node {
 		
 		return result;
 	    }
+
+	private Node send(Node currentNode) {
+		currentNode = currentNode.nextNode_;
+		return currentNode;
+	}
 
 	/**
 	The #receiver is requested to broadcast a message to all nodes.
@@ -246,7 +251,7 @@ public class Node {
 		    } catch (IOException exc) {
 			// just ignore
 		    };
-		    currentNode = currentNode.nextNode_;
+		    currentNode = send(currentNode);
 	        } while (! atDestination(currentNode, packet));
 	
 		try {
@@ -292,7 +297,7 @@ public class Node {
 	                    break;
 	            };
 	            buf.append(" -> ");
-	            currentNode = currentNode.nextNode_;
+	            currentNode = send(currentNode);
 	        } while (currentNode != this);
 	        buf.append(" ... ");
 	    }
@@ -332,7 +337,7 @@ public class Node {
 			    break;
 		    };
 		    buf.append(" </LI>");
-		    currentNode = currentNode.nextNode_;
+		    currentNode = send(currentNode);
 		} while (currentNode != this);
 		buf.append("\n\t<LI>...</LI>\n</UL>\n\n</BODY>\n</HTML>\n");
 	    }
@@ -370,7 +375,7 @@ public class Node {
 			    buf.append("<unknown></unknown>");;
 			    break;
 		    };
-		    currentNode = currentNode.nextNode_;
+		    currentNode = send(currentNode);
 		} while (currentNode != this);
 		buf.append("\n</network>");
 	    }
