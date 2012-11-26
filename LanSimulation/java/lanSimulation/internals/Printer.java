@@ -6,5 +6,9 @@ public class Printer extends Node {
 		super(type, name);
 		
 	}
+	
+	public Printer(byte type, String name, Node nextNode) {
+		super(type, name, nextNode);
+	}
 
 }

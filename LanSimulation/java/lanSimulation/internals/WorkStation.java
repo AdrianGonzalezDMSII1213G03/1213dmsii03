@@ -6,5 +6,9 @@ public class WorkStation extends Node {
 		super(type, name);
 		
 	}
+	
+	public WorkStation(byte type, String name, Node nextNode) {
+		super(type, name, nextNode);
+	}
 
 }
