@@ -1,5 +1,5 @@
 ---------------------------------ASCII------------------------------------------
-Workstation Filip [Workstation] -> Workstation n1 [Workstation] -> Workstation Hans [Workstation] -> Workstation Andy [Workstation] ->  ... 
+Workstation Filip [Workstation] -> Node n1 [Node] -> Workstation Hans [Workstation] -> Printer Andy [Printer] ->  ... 
 
 ---------------------------------HTML------------------------------------------
 <HTML>
@@ -11,9 +11,9 @@ Workstation Filip [Workstation] -> Workstation n1 [Workstation] -> Workstation H
 
 <UL>
 	<LI> Workstation Filip [Workstation] </LI>
-	<LI> Workstation n1 [Workstation] </LI>
+	<LI> Node n1 [Node] </LI>
 	<LI> Workstation Hans [Workstation] </LI>
-	<LI> Workstation Andy [Workstation] </LI>
+	<LI> Printer Andy [Printer] </LI>
 	<LI>...</LI>
 </UL>
 
@@ -26,9 +26,9 @@ Workstation Filip [Workstation] -> Workstation n1 [Workstation] -> Workstation H
 
 <network>
 	<workstation>Filip</workstation>
-	<workstation>n1</workstation>
+	<node>n1</node>
 	<workstation>Hans</workstation>
-	<workstation>Andy</workstation>
+	<printer>Andy</printer>
 </network>
 
 ---------------------------------SCENARIO: Print Success --------------------------
