@@ -42,6 +42,9 @@ public class Network {
     /**
     Maps the names of workstations on the actual workstations.
     Used to initiate the requests for the network.
+fgffgggh
+ghjfhjfhj
+fhjjh
     */
     public Hashtable workstations_;
 
